@@ -57,15 +57,13 @@ class permuted_partitioned_lbf:
         key_b = get_random_bytes(16)
 
         self.backup_a = bloomfilter.secure_bloomfilter(n_a, k_a, key_a)
-        for element in set_a:
-            self.backup_a.add(element)
+        self.backup_a.construct(set_a)
 
         self.backup_b = bloomfilter.secure_bloomfilter(n_b, k_b, key_b)
-        for element in set_b:
-            self.backup_b.add(element)
+        self.backup_b.construct(set_b)
     
     def query(self, element: any) -> bool:
         if self.lm.query(element):
-            return self.backup_a.test(element)
+            return self.backup_a.query(element)
         else:
-            return self.backup_b.test(element)
+            return self.backup_b.query(element)

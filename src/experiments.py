@@ -21,9 +21,7 @@ def run_experiment(classifier, memory_budget_bytes, security_parameter=16):
     k = int(math.ceil(math.log(2) * (n / set_size)))
 
     sbf = secure_bloomfilter(n, k, get_random_bytes(16))
-
-    for url in tqdm.tqdm(encode_df['url'], desc="Adding to secure classical BF"):
-        sbf.add(url)
+    sbf.construct([url for url in encode_df['url']])
 
     counter = 0
     fp_bodega = 0
@@ -37,7 +35,7 @@ def run_experiment(classifier, memory_budget_bytes, security_parameter=16):
         counter += 1
         if lm.query(url): fp_bodega += 1
         if lm.lm.query(url): fp_learning += 1
-        if sbf.test(url): fp_classical += 1
+        if sbf.query(url): fp_classical += 1
 
     fpr_bodega = fp_bodega / counter
     fpr_learning = fp_learning / counter
