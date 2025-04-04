@@ -13,5 +13,5 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip3 install -r requirements.txt
 python3 test_learning_model.py # does pre-processing
-python3 test_bodega.py
+python3 experiments.py
 ```

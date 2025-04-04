@@ -8,7 +8,7 @@ import os
 import numpy as np
 import preprocess
 
-def model_size(model):
+def model_size(model) -> int:
     temp_file = "/tmp/bodega_bloom_filter_learning_model.joblib"
     joblib.dump(model, temp_file)
     size = os.path.getsize(temp_file) 
@@ -18,10 +18,10 @@ def model_size(model):
 
 class learning_model:
     # in bytes
-    def memory_used(self):
+    def memory_used(self) -> int:
         return model_size(self.model)
     
-    def __init__(self, classifier, cache_preprocessed_data = True, clear_cache = False):
+    def __init__(self, classifier: any, cache_preprocessed_data: bool = True, clear_cache: bool = False) -> None:
         if cache_preprocessed_data:
             if not os.path.exists("/tmp/malicious_urls_tiny.csv") or clear_cache:
                 print("Preprocessing Data (will be cached next time)")
@@ -61,10 +61,10 @@ class learning_model:
             print("Removing preprocessed data")
             self.destroy()
 
-    def test(self, element):
+    def query(self, element: any) -> bool:
         pred = self.model.predict(pd.DataFrame([fe.generate_fields(element, 'ANY')[1:-1]], columns=fe.feature_names()[1:-1]))
         return pred[0] == 1
     
-    def destroy(self):
+    def destroy(self) -> None:
         preprocess.remove_data()
 

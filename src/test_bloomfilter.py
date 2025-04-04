@@ -1,7 +1,7 @@
 import unittest
 import random
 import bloomfilter
-import prp
+from Crypto.Random import get_random_bytes
 
 class test_secure_bloom_filter(unittest.TestCase):
     def test_correctness(self):
@@ -11,16 +11,16 @@ class test_secure_bloom_filter(unittest.TestCase):
             real_set.add(x)
 
         def test_with_random_n_k():
-            key = prp.generate_key()
+            # Generate a 16-byte (128-bit) key for AES-128
+            key = get_random_bytes(16)
             n = random.randint(10, 5000)
             k = random.randint(1, 20)
             sbf = bloomfilter.secure_bloomfilter(n, k, key)
             
-            for s in real_set:
-                sbf.add(s)
+            sbf.construct(real_set)
 
             for s in real_set:
-                self.assertTrue(sbf.test(s))
+                self.assertTrue(sbf.query(s))
 
             false_positives = 0
             for i in range(1000):
@@ -28,7 +28,7 @@ class test_secure_bloom_filter(unittest.TestCase):
                 while x in real_set:
                     x = bloomfilter.random_string(256)
 
-                if sbf.test(x):
+                if sbf.query(x):
                     false_positives += 1
             
             fpr = false_positives / 1000
