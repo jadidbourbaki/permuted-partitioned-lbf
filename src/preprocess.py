@@ -31,7 +31,7 @@ def generate_data():
 
         writer.writerow(row)
 
-        if random.randint(1, 5) == 1:
+        if random.randint(1, 4) == 1:
             writer_tiny.writerow(row)
 
     read_from.close()

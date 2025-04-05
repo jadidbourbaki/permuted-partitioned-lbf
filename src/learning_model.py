@@ -8,8 +8,11 @@ import os
 import numpy as np
 import preprocess
 
+def get_global_dataset() -> str:
+    return "/tmp/malicious_urls.csv"
+
 def model_size(model) -> int:
-    temp_file = "/tmp/bodega_bloom_filter_learning_model.joblib"
+    temp_file = "/tmp/permuted_partitioned_learning_model.joblib"
     joblib.dump(model, temp_file)
     size = os.path.getsize(temp_file) 
     print(f"Learning Model size: {np.round(size / 1024 / 1024, 2) } MB ({size * 8} bits)")
@@ -23,7 +26,7 @@ class learning_model:
     
     def __init__(self, classifier: any, cache_preprocessed_data: bool = True, clear_cache: bool = False) -> None:
         if cache_preprocessed_data:
-            if not os.path.exists("/tmp/malicious_urls_tiny.csv") or clear_cache:
+            if not os.path.exists(get_global_dataset()) or clear_cache:
                 print("Preprocessing Data (will be cached next time)")
                 preprocess.generate_data()
         else:
@@ -31,7 +34,7 @@ class learning_model:
                 preprocess.generate_data()
 
         print("Loading data")        
-        self.data = pd.read_csv("/tmp/malicious_urls_tiny.csv")
+        self.data = pd.read_csv(get_global_dataset())
         X = self.data.drop(['url', 'type'], axis=1)
         y = self.data[['type']]
 

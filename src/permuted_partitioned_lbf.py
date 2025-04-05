@@ -29,7 +29,7 @@ class permuted_partitioned_lbf:
         set_a = []
         set_b = []
 
-        df = pd.read_csv("/tmp/malicious_urls_tiny.csv")
+        df = pd.read_csv(learning_model.get_global_dataset())
         print("Original df:", len(df))
         df = df[df['type'] != 0]
         print("Filtered df:", len(df))
