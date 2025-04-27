@@ -17,12 +17,13 @@ mpl.rcParams.update({
     "lines.markersize": 5.5,
     "figure.dpi": 300,
     "pdf.fonttype": 42,
+    "mathtext.default": "regular",
 })
 
 def styled_plot(x, y1, y2, xlabel, ylabel, ylim, filename):
     plt.figure(figsize=(3.5, 2.5))
-    plt.plot(x, y1, 'o-', color='black', label='Permuted-Partitioned LBF')
-    plt.plot(x, y2, 'x--', color='gray', label='Secure CBF')
+    plt.plot(x, y1, 'o-', color='black', label='PPLBF')
+    plt.plot(x, y2, 'x--', color='gray', label='$CBF_{NY15}$')
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)

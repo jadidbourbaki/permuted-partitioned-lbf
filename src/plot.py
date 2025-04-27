@@ -16,7 +16,9 @@ mpl.rcParams.update({
     "lines.markersize": 5.5,
     "figure.dpi": 300,
     "pdf.fonttype": 42,
+    "mathtext.default": "regular",
 })
+
 
 def plot_from_csv():
     df = pd.read_csv("bin/experiment_results.csv")
@@ -32,12 +34,11 @@ def plot_from_csv():
             subset['fp_permuted_partitioned_lbf']
         ])
         ymin = max(all_fprs.min() * 0.5, 1e-6)  # clamp for log scale
-        # ymax = min(all_fprs.max() * 1.2, 1.0)
         ymax = 1.0
 
-        plt.figure(figsize=(3.5, 2.5))
-        plt.plot(mem_mbits, subset['fpr_classical'], 'x--', color='black', label='Secure CBF')
-        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='black', label=f'Permuted-Partitioned LBF')
+        plt.figure()
+        plt.plot(mem_mbits, subset['fpr_classical'], 'x--', color='black', label='NY CBF')
+        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='#1f77b4', label='Permuted Partitioned LBF')
 
         plt.xlabel('Memory Budget (Mbits)')
         plt.ylabel('False Positive Rate')

@@ -60,13 +60,3 @@ class secure_bloomfilter:
     def query(self, element: bytes | str) -> bool:
         permuted = self._apply_prp(element)
         return self.bloomfilter.query(permuted)
-
-# NOT cryptographically random
-def random_string(max_len):
-    def generate_random_string(length):
-        characters = string.ascii_letters + string.digits
-        return ''.join(random.choice(characters) for i in range(length))
-
-    x_len = random.randint(1, max_len)
-    x = generate_random_string(x_len)
-    return x

@@ -1,5 +1,6 @@
 from permuted_partitioned_lbf import *
 from bloomfilter import *
+from learning_model import *
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import GaussianNB
 from Crypto.Random import get_random_bytes
@@ -11,7 +12,7 @@ import matplotlib.pyplot as plt
 import csv
 
 def run_all_experiments():
-    df = pd.read_csv(learning_model.get_global_dataset())
+    df = pd.read_csv(get_global_dataset())
     encode_df = df[df['type'] == 1]
     test_df = df[df['type'] == 0]
 
@@ -63,7 +64,8 @@ def run_all_experiments():
     # Save to CSV
     with open("bin/experiment_results.csv", "w", newline='') as csvfile:
         fieldnames = ["classifier", "memory_budget_bytes", "model_size_bytes",
-                      "entries_tested", "fpr_classical", "fpr_learning", "fp_permuted_partitioned_lbf"]
+                      "entries_tested", "fpr_classical", "fpr_learning", 
+                      "fp_permuted_partitioned_lbf"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for row in results:

@@ -1,19 +1,18 @@
-import learning_model
-import bloomfilter
-import noy_cuckoo_filter
 import pandas as pd
 import math
 import tqdm
 import random
 from Crypto.Random import get_random_bytes
 from utils import bytes_to_mb
+from learning_model import *
+from noy_cuckoo_filter import naor_oved_yogev_cuckoo_filter
 
-class permuted_partitioned_lbf:
+class permuted_cuckoo_lbf:
     # memory budget in bytes
     def __init__(self, memory_budget: int, classifier = None):
         self.memory_budget = memory_budget
 
-        self.lm = learning_model.learning_model(classifier=classifier)
+        self.lm = learning_model(classifier=classifier)
         
         m_learned = self.lm.memory_used()
         m_a = int((self.memory_budget - m_learned) / 2)
@@ -21,13 +20,10 @@ class permuted_partitioned_lbf:
 
         print(f"m_learned: {bytes_to_mb(m_learned)} MB, m_a: {bytes_to_mb(m_a)} MB, m_b: {bytes_to_mb(m_b)} MB")
 
-        n_a = m_a * 8 # bytes to bits
-        n_b = m_b * 8
-
         set_a = []
         set_b = []
 
-        df = pd.read_csv(learning_model.get_global_dataset())
+        df = pd.read_csv(get_global_dataset())
         print("Original df:", len(df))
         df = df[df['type'] != 0]
         print("Filtered df:", len(df))
@@ -44,20 +40,26 @@ class permuted_partitioned_lbf:
         print("Cardinality of set a:", len(set_a))
         print("Cardinality of set b:", len(set_b))
 
-        # optimal hash counts
-        k_a = int(math.ceil(math.log(2) * (n_a / len(set_a))))
-        k_b = int(math.ceil(math.log(2) * (n_b / len(set_b))))
+        # Calculate number of items for each filter based on memory budget
+        # Each item takes fingerprint_size bytes (default 16) in the table
+        # The table size is 1.1 * n to provide headroom for insertions
+        fingerprint_size = 8  # bytes per fingerprint
+        table_size_factor = 1.1  # NOY filter uses 1.1 * n for table size
+        n_a = int(m_a / (fingerprint_size * table_size_factor))
+        n_b = int(m_b / (fingerprint_size * table_size_factor))
 
-        print(f"Info on backup bloom A: n={n_a}, k={k_a}")
-        print(f"Info on backup bloom B: n={n_b}, k={k_b}")
+        print(f"Info on backup cuckoo filter A: n={n_a}, m={n_a * fingerprint_size * table_size_factor}")
+        print(f"Info on backup cuckoo filter B: n={n_b}, m={n_b * fingerprint_size * table_size_factor}")
+
+        assert n_a > 0 and n_b > 0
 
         key_a = get_random_bytes(16)
         key_b = get_random_bytes(16)
 
-        self.backup_a = bloomfilter.secure_bloomfilter(n_a, k_a, key_a)
+        self.backup_a = naor_oved_yogev_cuckoo_filter(n=n_a, key=key_a)
         self.backup_a.construct(set_a)
 
-        self.backup_b = bloomfilter.secure_bloomfilter(n_b, k_b, key_b)
+        self.backup_b = naor_oved_yogev_cuckoo_filter(n=n_b, key=key_b)
         self.backup_b.construct(set_b)
     
     def query(self, element: any) -> bool:
