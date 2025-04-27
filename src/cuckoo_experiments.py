@@ -22,7 +22,7 @@ def run_cuckoo_experiments():
     }
 
     # Larger memory budgets for cuckoo filters (in bytes)
-    memory_budgets = [4194304, 8388608, 12582912, 16777216]  # 4MB to 16MB
+    memory_budgets = [67108864, 83886080, 100663296, 134217728]  # 64MB to 128MB
     security_parameter = 16  # 128 bits
     results = []
 
@@ -33,7 +33,7 @@ def run_cuckoo_experiments():
             pclbf = permuted_cuckoo_lbf(mem - 2 * security_parameter, clf)
 
             # Create NOY cuckoo filter with 4-byte fingerprints
-            fingerprint_size = 8  # 4 byte fingerprints
+            fingerprint_size = 1  # 1 byte fingerprints
             table_size_factor = 1.1  # NOY filter uses 1.1 * n for table size
             noy_n = int(mem / (fingerprint_size * table_size_factor))
             noy_filter = naor_oved_yogev_cuckoo_filter(n=noy_n, key=get_random_bytes(16), fingerprint_size=fingerprint_size)

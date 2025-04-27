@@ -43,7 +43,7 @@ class permuted_cuckoo_lbf:
         # Calculate number of items for each filter based on memory budget
         # Each item takes fingerprint_size bytes (default 16) in the table
         # The table size is 1.1 * n to provide headroom for insertions
-        fingerprint_size = 8  # bytes per fingerprint
+        fingerprint_size = 1  # bytes per fingerprint
         table_size_factor = 1.1  # NOY filter uses 1.1 * n for table size
         n_a = int(m_a / (fingerprint_size * table_size_factor))
         n_b = int(m_b / (fingerprint_size * table_size_factor))

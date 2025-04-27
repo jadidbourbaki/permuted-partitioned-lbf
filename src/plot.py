@@ -7,11 +7,11 @@ mpl.rcParams.update({
     "font.family": "serif",
     "font.serif": ["Times New Roman", "Times", "Computer Modern Roman"],
     "font.size": 10,
-    "axes.labelsize": 10,
-    "axes.titlesize": 11,
-    "legend.fontsize": 9,
-    "xtick.labelsize": 9,
-    "ytick.labelsize": 9,
+    "axes.labelsize": 14,
+    "axes.titlesize": 14,
+    "legend.fontsize": 18,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
     "lines.linewidth": 1.3,
     "lines.markersize": 5.5,
     "figure.dpi": 300,
@@ -34,11 +34,12 @@ def plot_from_csv():
             subset['fp_permuted_partitioned_lbf']
         ])
         ymin = max(all_fprs.min() * 0.5, 1e-6)  # clamp for log scale
+        # ymax = min(all_fprs.max() * 1.2, 1.0)
         ymax = 1.0
 
         plt.figure()
-        plt.plot(mem_mbits, subset['fpr_classical'], 'x--', color='black', label='NY CBF')
-        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='#1f77b4', label='Permuted Partitioned LBF')
+        plt.plot(mem_mbits, subset['fpr_classical'], 'x--', color='black', label=r'NY CBF')
+        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='black', label=f'PPLBF')
 
         plt.xlabel('Memory Budget (Mbits)')
         plt.ylabel('False Positive Rate')

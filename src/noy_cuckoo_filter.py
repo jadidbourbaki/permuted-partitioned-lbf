@@ -5,10 +5,9 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
 class naor_oved_yogev_cuckoo_filter:
-    def __init__(self, n: int, key: bytes, fingerprint_size: int = 16, max_relocations: int = 500):
+    def __init__(self, n: int, key: bytes, fingerprint_size: int = 16, max_relocations: int = 5000):
         self.n = n  # Expected number of items
-        # Note: we choose a constant factor of 1.1 to mirror the analysis of Naor and Yogev
-        self.m = int(1.1 * n)  # Table size, could adjust constant factor
+        self.m = int(2 * n)  # Table size, could adjust constant factor
         self.T1 = [None] * self.m
         self.T2 = [None] * self.m
         self.key = key  # AES key
