@@ -7,18 +7,17 @@ mpl.rcParams.update({
     "font.family": "serif",
     "font.serif": ["Times New Roman", "Times", "Computer Modern Roman"],
     "font.size": 10,
-    "axes.labelsize": 14,
-    "axes.titlesize": 14,
-    "legend.fontsize": 18,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
+    "axes.labelsize": 10,
+    "axes.titlesize": 11,
+    "legend.fontsize": 9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
     "lines.linewidth": 1.3,
     "lines.markersize": 5.5,
     "figure.dpi": 300,
     "pdf.fonttype": 42,
     "mathtext.default": "regular",
 })
-
 
 def plot_from_csv():
     df = pd.read_csv("bin/experiment_results.csv")
@@ -37,9 +36,9 @@ def plot_from_csv():
         # ymax = min(all_fprs.max() * 1.2, 1.0)
         ymax = 1.0
 
-        plt.figure()
+        plt.figure(figsize=(3.5, 2.5))
         plt.plot(mem_mbits, subset['fpr_classical'], 'x--', color='black', label=r'NY CBF')
-        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='black', label=f'PPLBF')
+        plt.plot(mem_mbits, subset['fp_permuted_partitioned_lbf'], 'o-', color='black', label='PRP-LBF')
 
         plt.xlabel('Memory Budget (Mbits)')
         plt.ylabel('False Positive Rate')
@@ -56,7 +55,7 @@ def plot_from_csv():
 
         plt.grid(True, which='major', linestyle=':', linewidth=0.6, alpha=0.7)
         plt.legend(loc='best', frameon=False)
-        plt.tight_layout()
+        # plt.tight_layout()
         plt.savefig(f"bin/plot_{clf}.pdf", bbox_inches='tight')
         plt.close()
 

@@ -12,6 +12,9 @@ import matplotlib.pyplot as plt
 import csv
 
 def run_cuckoo_experiments():
+    # Intelligent split is not used in this experiment, seems like it doesn't really do a good job at balancing the memory usage
+    intelligent_split = False
+
     df = pd.read_csv(get_global_dataset())
     encode_df = df[df['type'] == 1]
     test_df = df[df['type'] == 0]
@@ -21,8 +24,7 @@ def run_cuckoo_experiments():
         "LinearSVC": LinearSVC()
     }
 
-    # Larger memory budgets for cuckoo filters (in bytes)
-    memory_budgets = [67108864, 83886080, 100663296, 134217728]  # 64MB to 128MB
+    memory_budgets = [52424, 104856, 262144, 524288]  # in bytes
     security_parameter = 16  # 128 bits
     results = []
 
@@ -30,12 +32,11 @@ def run_cuckoo_experiments():
         for mem in memory_budgets:
             print(f"Running {clf_name} with memory {mem} bytes")
 
-            pclbf = permuted_cuckoo_lbf(mem - 2 * security_parameter, clf)
+            pclbf = permuted_cuckoo_lbf(mem - 2 * security_parameter, clf, intelligent_split)
 
             # Create NOY cuckoo filter with 4-byte fingerprints
             fingerprint_size = 1  # 1 byte fingerprints
-            table_size_factor = 1.1  # NOY filter uses 1.1 * n for table size
-            noy_n = int(mem / (fingerprint_size * table_size_factor))
+            noy_n = int(mem / fingerprint_size)
             noy_filter = naor_oved_yogev_cuckoo_filter(n=noy_n, key=get_random_bytes(16), fingerprint_size=fingerprint_size)
             noy_filter.construct([url for url in encode_df['url']])
 

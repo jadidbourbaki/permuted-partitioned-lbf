@@ -19,8 +19,7 @@ mpl.rcParams.update({
     "mathtext.default": "regular",
 })
 
-
-def plot_cuckoo_results():
+def plot_from_csv():
     df = pd.read_csv("bin/cuckoo_experiment_results.csv")
     classifiers = df['classifier'].unique()
 
@@ -34,42 +33,32 @@ def plot_cuckoo_results():
             subset['fp_noy_cuckoo']
         ])
         ymin = max(all_fprs.min() * 0.5, 1e-6)  # clamp for log scale
-        ymax = 1.0
+        ymax = min(all_fprs.max() * 1.5, 1.0)
+        # ymax = 1.0
 
-        # Create two subplots: one for FPR, one for skipped items
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6, 8), sharex=True)
-
+        plt.figure(figsize=(3.5, 2.5))
         # Plot FPR on first subplot
-        ax1.plot(mem_mbits, subset['fp_permuted_cuckoo_lbf'], 's-', color='#ff7f0e', label='Permuted Cuckoo LBF')
-        ax1.plot(mem_mbits, subset['fp_noy_cuckoo'], '^-', color='#2ca02c', label='NOY Cuckoo CBF')
+        plt.plot(mem_mbits, subset['fp_noy_cuckoo'],  'x--', color='black', label=r'NOY CBF')
+        plt.plot(mem_mbits, subset['fp_permuted_cuckoo_lbf'], 'o-', color='black', label='Cuckoo-LBF')
 
-        ax1.set_ylabel('False Positive Rate')
-        ax1.set_yscale('log')
-        ax1.set_ylim(ymin, ymax)
+        plt.xlabel('Memory Budget (Mbits)')
+        plt.ylabel('False Positive Rate')
+        plt.yscale('log')
+        plt.ylim(ymin, ymax)
+
+        plt.xlim(0, 4.1)
+        plt.xticks([0, 1, 2, 3, 4])
 
         # Only show yticks that are within the y-limit
-        log_ticks = np.array([1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6])
-        log_ticks = log_ticks[(log_ticks >= ymin) & (log_ticks <= ymax)]
-        ax1.set_yticks(log_ticks)
-        ax1.set_yticklabels([f'$10^{{{int(np.log10(t))}}}$' for t in log_ticks])
+        # log_ticks = np.array([1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6])
+        # log_ticks = log_ticks[(log_ticks >= ymin) & (log_ticks <= ymax)]
+        # plt.yticks(log_ticks, [f'$10^{{{int(np.log10(t))}}}$' for t in log_ticks])
 
-        ax1.grid(True, which='major', linestyle=':', linewidth=0.6, alpha=0.7)
-        ax1.legend(loc='best', frameon=False)
-
-        # Plot skipped items on second subplot
-        ax2.plot(mem_mbits, subset['noy_skipped_items'], '^-', color='#2ca02c', label='NOY Cuckoo CBF')
-        ax2.set_xlabel('Memory Budget (Mbits)')
-        ax2.set_ylabel('Skipped Items')
-        ax2.grid(True, which='major', linestyle=':', linewidth=0.6, alpha=0.7)
-        ax2.legend(loc='best', frameon=False)
-
-        # Set x-axis limits and ticks
-        plt.xlim(0, 64)  # 8MB * 8 bits = 64 Mbits
-        plt.xticks([0, 16, 32, 48, 64])
-
+        plt.grid(True, which='major', linestyle=':', linewidth=0.6, alpha=0.7)
+        plt.legend(loc='best', frameon=False)
         plt.tight_layout()
         plt.savefig(f"bin/cuckoo_plot_{clf}.pdf", bbox_inches='tight')
         plt.close()
 
 if __name__ == '__main__':
-    plot_cuckoo_results() 
+    plot_from_csv()

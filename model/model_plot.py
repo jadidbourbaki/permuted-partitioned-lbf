@@ -22,8 +22,8 @@ mpl.rcParams.update({
 
 def styled_plot(x, y1, y2, xlabel, ylabel, ylim, filename):
     plt.figure(figsize=(3.5, 2.5))
-    plt.plot(x, y1, 'o-', color='black', label='PPLBF')
-    plt.plot(x, y2, 'x--', color='gray', label='$CBF_{NY15}$')
+    plt.plot(x, y1, 'o-', color='black', label='PRP-LBF')
+    plt.plot(x, y2, 'x--', color='gray', label='NY CBF')
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)

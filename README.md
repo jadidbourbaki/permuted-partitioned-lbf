@@ -17,7 +17,7 @@ python3 experiments.py
 python3 plot.py
 ```
 
-To run the cuckoo filter experiments (which use larger memory budgets), run
+To run the cuckoo filter experiments, run
 
 ```
 python3 cuckoo_experiments.py

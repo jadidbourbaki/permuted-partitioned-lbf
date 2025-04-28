@@ -26,10 +26,10 @@ class naor_oved_yogev_cuckoo_filter:
         return prf_output[:self.fingerprint_size]
 
     def _h1(self, item: any) -> int:
-        return mmh3.hash(str(item), 0) % self.m
+        return mmh3.hash(str(item), 11) % self.m
 
     def _h2(self, item: any) -> int:
-        return mmh3.hash(str(item), 1) % self.m
+        return mmh3.hash(str(item), 42) % self.m
     
     def construct(self, input_set: list[bytes | str]) -> None:
         for element in input_set:
