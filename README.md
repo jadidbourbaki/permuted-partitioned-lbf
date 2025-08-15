@@ -27,3 +27,17 @@ python3 cuckoo_plot.py
 The experiments will generate the following files in the `bin/` directory:
 - `experiment_results.csv` and `plot_{classifier}.pdf` for the original experiments
 - `cuckoo_experiment_results.csv` and `cuckoo_plot_{classifier}.pdf` for the cuckoo filter experiments
+
+Based on AsiaCrypt 2025 reviewer feedback, we also added an extended set of experiments that check FPR when the memory budget takes on much larger values. To run 
+this extended set of experiments, go to `src/` and run
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r requirements.txt
+python3 test_learning_model.py # does pre-processing
+python3 extended_experiments.py
+python3 extended_plot.py
+python3 extended_cuckoo_experiments.py
+python3 extended_cuckoo_plot.py
+```
