@@ -38,7 +38,7 @@ def plot_from_csv():
 
         plt.figure(figsize=(3.5, 2.5))
         # Plot FPR on first subplot
-        plt.plot(mem_mbits, subset['fp_noy_cuckoo'],  'x--', color='black', label=r'NOY CBF')
+        plt.plot(mem_mbits, subset['fp_noy_cuckoo'],  'x--', color='black', label=r'NOY-Cuckoo Filter')
         plt.plot(mem_mbits, subset['fp_permuted_cuckoo_lbf'], 'o-', color='black', label='Cuckoo-LBF')
 
         plt.xlabel('Memory Budget (Mbits)')
